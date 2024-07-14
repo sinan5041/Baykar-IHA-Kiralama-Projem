@@ -1,0 +1,196 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Araç kiralamak için seçim yapınız. </h1>
+    <h1>...................................................................................................................
+    </h1>
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+            .tablo-container {
+                display: flex;
+                justify-content: space-between;
+                
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+    
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            .ekle-button {
+                float: right;
+                margin-top: 10px;
+                margin-right: 10px;
+            }
+    
+            .sil-button, .yonlendir-button {
+                float: right;
+                margin-top: 10px;
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+    <body>
+    
+    <div class="tablo-container">
+        <div>
+        <h2> Araç Seçimi</h2>
+        <table id="tablo1">
+            <thead>
+                <tr>
+                    <th>Seçim</th>
+                    <th>Araç Adı</th>
+                    <th>Menzil</th>
+                    <th>Ağırlık</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac1"></td>
+                    <td>Bayraktar Kızılelma</td>
+                    <td>30.000 feet</td>
+                    <td>Max 8.5 Ton</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac2"></td>
+                    <td>Bayraktar Akıncı</td>
+                    <td>40.000 feet</td>
+                    <td>1500 kg</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac3"></td>
+                    <td>Bayraktar TB3</td>
+                    <td>1900 km</td>
+                    <td>1450+280 kg</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac4"></td>
+                    <td>Bayraktar TB2</td>
+                    <td>25.000 feet</td>
+                    <td>22.5+10 kg</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac5"></td>
+                    <td>KEMANKEŞ Mini Akıllı Seyir Füzesi</td>
+                    <td>200 km+</td>
+                    <td>30+6 kg</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac6"></td>
+                    <td>Bayraktar DİHA</td>
+                    <td>15.000 feet, 150 km</td>
+                    <td>50+5 kg</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="arac" value="Arac7"></td>
+                    <td>Bayraktar Mini İHA</td>
+                    <td>4.000 feet, 15 km</td>
+                    <td>450 kg</td>
+                </tr>
+               
+            </tbody>
+        </table>
+    
+        <button class="ekle-button" onclick="ekleButonu()">Ekle</button>
+        </div>
+        <div>
+        <h2> Seçilen Araçlar</h2>
+        <table id="tablo2">
+            <thead>
+                <tr>
+                    <th>Araç Adı</th>
+                    <th>Adet</th>
+                </tr>
+            </thead>
+            <tbody id="tablo2-tbody">
+                
+            </tbody>
+        </table>
+        <button class="yonlendir-button" onclick="yonlendirButonu()">İşlem Tamam Beni Yönlendir</button>
+        <button class="sil-button" onclick="silButonu()">Sil</button>
+        </div>
+    </div>
+        <script>
+            function ekleButonu() {
+                var tablo1 = document.getElementById('tablo1');
+                var seciliAraclar = tablo1.querySelectorAll('input[name="arac"]:checked');
+                var tablo2Tbody = document.getElementById('tablo2-tbody');
+                
+                if (seciliAraclar.length > 0) {
+                    seciliAraclar.forEach(function (seciliArac) {
+                        var aracAdi = seciliArac.parentNode.nextElementSibling.textContent;
+                        var eskiSatir = null;
+    
+                        for (var i = 0; i < tablo2Tbody.rows.length; i++) {
+                            var hucreAd = tablo2Tbody.rows[i].cells[0];
+                            if (hucreAd.innerHTML.includes(aracAdi)) {
+                                eskiSatir = tablo2Tbody.rows[i];
+                                break;
+                            }
+                        }
+    
+                        if (eskiSatir) {
+                            var hucreAdet = eskiSatir.cells[1];
+                            var sayi = parseInt(hucreAdet.innerHTML.replace(/[^\d]/g, '')) + 1;
+                            hucreAdet.innerHTML = '(' + sayi + ')';
+                        } else {
+                            var yeniSatir = tablo2Tbody.insertRow();
+                            var hucreAd = yeniSatir.insertCell(0);
+                            var hucreAdet = yeniSatir.insertCell(1);
+                            
+                            hucreAd.innerHTML = aracAdi;
+                            hucreAdet.innerHTML = '(1)';
+                        }
+                    });
+                } else {
+                    alert("Lütfen bir araç seçin.");
+                }
+            }
+    
+            function silButonu() {
+                var tablo2Tbody = document.getElementById('tablo2-tbody');
+                if (tablo2Tbody.rows.length > 0) {
+                    tablo2Tbody.deleteRow(tablo2Tbody.rows.length - 1);
+                }
+            }
+    
+            function yonlendirButonu() {
+                var tablo2Tbody = document.getElementById('tablo2-tbody');
+                var aracAdlari = [];
+                for (var i = 0; i < tablo2Tbody.rows.length; i++) {
+                    var hucreAd = tablo2Tbody.rows[i].cells[0];
+                    aracAdlari.push(hucreAd.textContent.trim());
+                }
+                alert("Lütfen bu metni kopyalayın ve bilgilerinizi girerek bize ulaşın. \n"+
+                "Aşağıdaki araçları kiralamak istiyorum\n Araçlar:\n" + aracAdlari.join('\n') );
+                window.open("https://baykartech.com/tr/iletisim/", "_blank");
+                window.open("http://127.0.0.1:8000/user/login/", "_blank");
+            }
+        </script>
+    
+    </body>
+    </html>
+    
+    
+
+
+    
+{% endblock %}
+
